@@ -1,4 +1,4 @@
-PROJECT_NAME = service_template
+PROJECT_NAME = url-shortener
 NPROCS ?= $(shell nproc)
 CLANG_FORMAT ?= clang-format
 DOCKER_IMAGE ?= ghcr.io/userver-framework/ubuntu-24.04-userver:latest
@@ -75,4 +75,4 @@ $(addprefix docker-cmake-, $(PRESETS)) $(addprefix docker-build-, $(PRESETS)) $(
 		$(DOCKER_IMAGE) \
 		env CCACHE_DIR=$$PWD/.ccache \
 		    HOME=$$HOME \
-		    $$PWD/run_as_user.sh $(shell /bin/id -u) $(shell /bin/id -g) make $*
+		    $$PWD/run_as_user.sh $(shell id -u) $(shell id -g) make $*

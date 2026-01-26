@@ -1,4 +1,6 @@
 components_manager:
+    coro_pool:
+        stack_usage_monitor_enabled: false
     task_processors:                  # Task processor is an executor for coroutine tasks
 
         main-task-processor:          # Make a task processor for CPU-bound coroutine tasks.
@@ -12,7 +14,8 @@ components_manager:
     components:                       # Configuring components that were registered via component_list
         server:
             listener:                 # configuring the main listening socket...
-                port: $server-port            # ...to listen on this port and...
+                port: 8080   # ...to listen on this port and...
+                address: 0.0.0.0     
                 task_processor: main-task-processor    # ...process incoming requests on this task processor.
         logging:
             fs-task-processor: fs-task-processor
@@ -31,9 +34,19 @@ components_manager:
 
         testsuite-support: {}
 
+        congestion-control:
+        
+        http-client-middleware-pipeline:
+            middlewares: {}
+
         http-client:
-            load-enabled: $is_testing
+           core-component: http-client-core
+           
+        http-client-core:
             fs-task-processor: fs-task-processor
+            threads: 2
+            user-agent: url-shortener-service
+            testsuite-enabled: $is_testing
 
         dns-client:
             fs-task-processor: fs-task-processor
@@ -50,7 +63,7 @@ components_manager:
             throttling_enabled: false
             url_trailing_slash: strict-match
 
-        handler-hello:                    # Finally! Our handler.
-            path: /hello                  # Registering handler by URL '/hello'.
+        handler-url-shortener:                    # Finally! Our handler.
+            path: /v1/shorten                  # Registering handler by URL '/hello'.
             method: GET,POST              # It will only reply to GET (HEAD) and POST requests.
             task_processor: main-task-processor  # Run it on CPU bound task processor

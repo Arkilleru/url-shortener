@@ -1,5 +1,19 @@
-# Start via `make test-debug` or `make test-release`
-async def test_basic(service_client):
-    response = await service_client.post('/hello', params={'name': 'Tester'})
+import pytest
+
+
+async def test_shorten_basic(service_client):
+    url = 'https://google.com'
+    response = await service_client.post('/v1/shorten', params={'url': url})
+
     assert response.status == 200
-    assert response.text == 'Hello, Tester!\n'
+    assert 'id=' in response.text
+
+
+async def test_blacklist(service_client):
+    bad_url = 'http://malware.ru/danger'
+    response = await service_client.post(
+        '/v1/shorten',
+        params={'url': bad_url})
+
+    assert response.status == 403
+    assert 'blacklisted' in response.text
