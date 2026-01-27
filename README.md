@@ -17,7 +17,7 @@
 Сервис построен на базе userver, который стабильно работает на большинстве Linux-дистрибутивов (Ubuntu, Fedora, Debian, Alpine). Хотя основной метод запуска — Docker, возможна локальная сборка на поддерживаемых системах
 
 склонировать репозиторий:
-* ` git clone https://github.com/Arkilleru/url-shortener.git`
+* ```git clone https://github.com/Arkilleru/url-shortener.git```
 
 
 Параметр PRESET определяет режим сборки: debug (для отладки) или release (для максимальной производительности).
@@ -40,7 +40,21 @@
 
 * `make docker-clean-data` — остановить и удалить Docker-контейнеры проекта
 
+## Команды
 
+Для тестирования используйте утилиту `curl` в терминале. Если запуск идёт с использованием докер контейнера, то команды вводятся только в терминале самого контейнера.
+
+### 1. Создание короткой ссылки (POST)
+Отправьте URL, который хотите сократить. В ответ сервис пришлет ID вашей ссылки.
+```bash
+curl -i -X POST "http://localhost:8080/v1/shorten?url=[https://google.com](https://google.com)"
+```
+
+### 2. Переход по ссылке (GET)
+Проверьте редирект (302 Found) на оригинальный сайт.
+```bash
+curl -i -X GET "http://localhost:8080/v1/shorten?id=ID""
+```
 ## License
 
 The original template is distributed under the [Apache-2.0 License](https://github.com/userver-framework/userver/blob/develop/LICENSE)
