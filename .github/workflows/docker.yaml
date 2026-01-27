@@ -6,7 +6,7 @@ name: Docker build
     pull_request:
     push:
         branches:
-          - master
+          - main
           - develop
           - feature/**
 
