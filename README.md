@@ -1,36 +1,44 @@
 **This repository is for userver v2.8 or older versions. For newer versions of userver please use 
 [userver-create-service](https://userver.tech/de/dab/md_en_2userver_2build_2build.html#autotoc_md177) script.**
 
-# service_template
+# URL Shortener Service
 
-Template of a C++ service that uses [userver framework](https://github.com/userver-framework/userver).
-
-
-## Download and Build
-
-To create your own userver-based service follow the following steps:
-
-1. Press the "Use this template button" at the top right of this GitHub page
-2. Clone the service `git clone your-service-repo && cd your-service-repo && git submodule update --init`
-3. Give a proper name to your service and replace all the occurrences of "service_template" string with that name
-4. Feel free to tweak, adjust or fully rewrite the source code of your service.
+Высокопроизводительный асинхронный сокращатель ссылок на базе фреймворка [userver](https://github.com/userver-framework/userver).
 
 
-## Makefile
+## Реализованный функционал
+* **Blacklist Filtering:** Быстрая фильтрация вредоносных доменов с использованием **Hash Set** (`std::unordered_set`) — сложность поиска $O(1)$.
+* **Thread-safe Storage:** Хранилище в памяти с использованием `std::shared_mutex` (Read-Write Lock) для обеспечения конкурентного доступа.
+* **HTTP API:** - `POST /v1/shorten` — создание ссылки.
+    - `GET /v1/shorten` — редирект (302 Found).
+* **Testing:** Покрытие базовых сценариев (создание, редирект, черный список) через pytest.
 
-`PRESET` is either `debug`, `release`, or if you've added custom presets in `CMakeUserPresets.json`, it
-can also be `debug-custom`, `release-custom`.
+## Сборка и запуск
+Сервис построен на базе userver, который стабильно работает на большинстве Linux-дистрибутивов (Ubuntu, Fedora, Debian, Alpine). Хотя основной метод запуска — Docker, возможна локальная сборка на поддерживаемых системах
 
-* `make cmake-PRESET` - run cmake configure, update cmake options and source file lists
-* `make build-PRESET` - build the service
-* `make test-PRESET` - build the service and run all tests
-* `make start-PRESET` - build the service, start it in testsuite environment and leave it running
-* `make install-PRESET` - build the service and install it in directory set in environment `PREFIX`
-* `make` or `make all` - build and run all tests in `debug` and `release` modes
-* `make format` - reformat all C++ and Python sources
-* `make dist-clean` - clean build files and cmake cache
-* `make docker-COMMAND` - run `make COMMAND` in docker environment
-* `make docker-clean-data` - stop docker containers
+склонировать репозиторий:
+* ` git clone https://github.com/Arkilleru/url-shortener.git`
+
+
+Параметр PRESET определяет режим сборки: debug (для отладки) или release (для максимальной производительности).
+
+* `make cmake-PRESET` — запустить настройку CMake, обновить параметры и списки исходных файлов.
+
+* `make build-PRESET` — собрать сервис (компиляция).
+
+* `make test-PRESET` — собрать сервис и запустить все тесты.
+
+* `make start-PRESET` — собрать сервис и оставить его запущенным в тестовом окружении.
+
+* `make install-PRESET` — установить собранный проект в директорию PREFIX.
+
+* `make format` — автоматически отформатировать весь исходный код (C++ и Python).
+
+* `make dist-clean` — полная очистка: удалить файлы сборки и кэш CMake.
+
+* `make docker-COMMAND` — запустить любую из вышеперечисленных команд внутри Docker-контейнера (например, make docker-test-debug).
+
+* `make docker-clean-data` — остановить и удалить Docker-контейнеры проекта
 
 
 ## License
