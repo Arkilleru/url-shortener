@@ -2,7 +2,7 @@
 
 #include <userver/server/handlers/http_handler_base.hpp>
 #include <unordered_map>
-#include <shared_mutex>
+#include <userver/engine/shared_mutex.hpp>
 
 namespace url_shortener::handlers {
 
@@ -18,7 +18,7 @@ public:
 
 private:
     mutable std::unordered_map<std::string, std::string> storage_;
-    mutable std::shared_mutex mutex_;
+    mutable userver::engine::SharedMutex mutex_;
 };
 
 } // namespace url_shortener::handlers

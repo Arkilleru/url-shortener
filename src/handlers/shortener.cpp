@@ -26,8 +26,9 @@ std::string Shortener::HandleRequestThrow(
     std::string id = userver::crypto::hash::Sha256(long_url).substr(0, 6);
 
     {
-      std::unique_lock lock(mutex_);
+      mutex_.lock();
       storage_[id] = long_url;
+      mutex_.unlock(); 
     }
 
     return "Shortened: http://localhost:8080/v1/shorten?id=" + id + "\n";
@@ -35,8 +36,9 @@ std::string Shortener::HandleRequestThrow(
 
   const auto& id = request.GetArg("id");
   if (!id.empty()) {
-    std::shared_lock lock(mutex_); 
+    mutex_.lock_shared();
     auto it = storage_.find(id);
+    mutex_.unlock_shared(); 
     
     if (it != storage_.end()) {
       auto& response = request.GetHttpResponse();
